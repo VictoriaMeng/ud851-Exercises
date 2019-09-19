@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.os.AsyncTask;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
 
@@ -56,14 +57,36 @@ public class MainActivity extends AppCompatActivity {
         String githubQuery = mSearchBoxEditText.getText().toString();
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        String githubSearchResults = null;
-        try {
-            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
-            mSearchResultsTextView.setText(githubSearchResults);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        String githubSearchResults = null;
+//        try {
+//            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
+//            mSearchResultsTextView.setText(githubSearchResults);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        new GithubQueryTask().execute(githubSearchUrl);
         // TODO (4) Create a new GithubQueryTask and call its execute method, passing in the url to query
+    }
+
+    public class GithubQueryTask extends AsyncTask<URL, Void, String> {
+        @Override
+        protected String doInBackground(URL... params) {
+            URL searchURL = params[0];
+            String githubSearchResults = null;
+            try {
+                githubSearchResults = NetworkUtils.getResponseFromHttpUrl(searchURL);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return githubSearchResults;
+        }
+
+        protected void onPostExecute(String githubSearchResults) {
+            if (githubSearchResults != null && !githubSearchResults.equals("")) {
+                mSearchResultsTextView.setText(githubSearchResults);
+            }
+        }
+
     }
 
     // TODO (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
