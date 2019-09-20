@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     // TODO (1) Create a method called showMap with a Uri as the single parameter
-
     // Do steps 2 - 4 within the showMap method
 
 
